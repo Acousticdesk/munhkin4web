@@ -4,9 +4,10 @@
   window.Munchkin = window.Munchkin || {};
 
   window.Munchkin.game = {
-    clickedCardName: null,
+    clickedCardId: null,
     turn: {
       progress: false,
+      phase: 1,
       monster: null,
       curse: null,
       other: null,
@@ -21,18 +22,30 @@
     nextPhase() {
       if (!this.turn.progress) {
         this.knockKnock();
+        this.turn.phase = 2;
       } else if (this.turn.monster) {
         this.battlePhase();
-      } else if (this.turn.curse || this.turn.other && !this.turn.advOrClean) {
+      } else if ( (this.turn.curse || this.turn.other) && this.turn.phase === 2 ) {
         window.Munchkin.ui.updateProgress(
           'You haven\'t met any monster :( \
              Drop a monster card to fight with it \
              or press "nextPhase" again to clean stash'
         );
-      } else if (this.turn.advOrClean === 'clean') {
-        this.cleanStashPhase();
+        this.turn.phase = 2.5;
       } else if (this.turn.advOrClean === 'adventure') {
         this.adventurePhase();
+      } else if (this.turn.phase === 2.5) {
+        this.cleanStashPhase();
+      } else if (this.turn.phase === 3) {
+        if (window.Munchkin.player.hand.length <= 5) {
+          this.allowNextTurn();
+          window.Munchkin.ui.updateProgress('Oppenents turn...');
+        } else {
+          window.Munchkin.ui.updateProgress(
+            'You have more than 5 cards on your hands! \
+            Drop or equip some of them to be able to continue'
+          );
+        }
       }
     },
     knockKnock() {
@@ -63,27 +76,34 @@
       if (window.Munchkin.player.str > monster.str) {
         window.Munchkin.player
           .getCardsToHand(monster.reward.treasures, 'treasures')
-          .addLvls(monster.reward.lvl);
+          .addLvls(monster.reward.lvl)
+          .updateStr();
         this.turn.monster = 'dead';
         window.Munchkin.ui.updateHand();
         window.Munchkin.ui.updatePlayer('lvl', window.Munchkin.player.lvl);
+        window.Munchkin.ui.updatePlayer('str', window.Munchkin.player.str);
         window.Munchkin.ui.updateProgress(`
           Congrat\'s you have just beaten this monster 
           and obtained ${monster.reward.treasures} treasure${monster.reward.treasures > 1 ? 's' : ''}  and 
           ${monster.reward.lvl} level${monster.reward.lvl > 1 ? 's' : ''}
         `);
+        this.turn.phase = 3;
       } else {
         window.Munchkin.ui.updateProgress('You can\'t beat this monster, try to find some help!');
       }
     },
     cleanStashPhase() {
-      window.Munchkin.player.getCardsToHand(1, 'doors')
+      window.Munchkin.player.getCardsToHand(1, 'doors');
+      window.Munchkin.ui.updateProgress('Great, you have obtained a new card');
+      window.Munchkin.ui.updateHand();
+      this.turn.phase = 3;
     },
     enableAdventurePhase() {
       this.turn.advOrClean = 'adventure';
+      this.phase = 2.5;
     },
     adventurePhase() {
-      const card = window.Munchkin.player.pickCardFromHand(this.clickedCardName);
+      const card = window.Munchkin.player.pickCardFromHand(this.clickedCardId);
 
       if (card && card.type === 'monster') {
         window.Munchkin.player.dropCard('hand', card);

@@ -5,13 +5,14 @@
 
   window.Munchkin.player = {
       lvl: 1,
-      str: 10,
+      str: 1,
       hand: [],
       equipped: [],
       hold: [],
       curses: [],
       addLvls(amount) {
         this.lvl += amount;
+        return this;
       },
       becomeCursed(curse) {
         this.curses.push(curse);
@@ -27,19 +28,24 @@
         this.hand.push(card);
         return this;
       },
-      pickCardFromHand(card) {
+      pickCardFromHand(cardId) {
         return this.hand.find((c) => {
-          return c.name === card;
+          return c.id === cardId;
         });
       },
-      dropCard(deck, card) {
-        this[deck] = this[deck].filter((c) => c.name !== card.name);
+      dropCard(deck, cardId) {
+        this[deck] = this[deck].filter((c) => c.id !== cardId);
         return this;
       },
-      cardToInventory(card, equipment) {
-        this[equipment].push(player.pickCardFromHand(card));
-        this.dropCard('hand', card);
+      cardToInventory(cardId, equipment) {
+        this[equipment].push(this.pickCardFromHand(cardId));
+        this.dropCard('hand', cardId);
+
         return this;
+      },
+      updateStr() {
+        const bonus = this.equipped.reduce((state, item) => state + item.bonus, 0);
+        this.str = this.lvl + bonus;
       }
     };
 })();

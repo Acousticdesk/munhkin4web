@@ -8,7 +8,7 @@
       progressBox: document.getElementById('progress').getBoundingClientRect(),
       getHTMLForCards(cardsCollection) {
         return cardsCollection
-            .reduce((prevState, card) => prevState + `<li data-card-name="${card.name}">
+            .reduce((prevState, card) => prevState + `<li data-card-id="${card.id}">
               <p><b>${card.name}</b></p>
               <p><i>${card.type}</i></p>
               <p><i>${card.description || ''}</i></p>
@@ -32,12 +32,12 @@
         document.getElementById('hand_cards').innerHTML = html;
       },
       updateHoldCards() {
-        const html = this.getHTMLForCards(window.Munchkin.player.inventory.hold);
+        const html = this.getHTMLForCards(window.Munchkin.player.hold);
 
         document.getElementById('hold_cards').innerHTML = html;
       },
-      updateEquippedCards: () => {
-        const html = this.getHTMLForCards(window.Munchkin.player.inventory.equipped);
+      updateEquippedCards() {
+        const html = this.getHTMLForCards(window.Munchkin.player.equipped);
 
         document.getElementById('equipped_cards').innerHTML = html;
       },
@@ -68,21 +68,43 @@
           context.style.left = e.pageX + 'px';
           context.style.top = e.pageY + 'px';
 
-          window.Munchkin.game.clickedCardName = 
-            e.target.closest('[data-card-name]').dataset.cardName;
+          window.Munchkin.game.clickedCardId = 
+            window.parseInt(
+              e.target.closest('[data-card-id]').dataset.cardId
+            );
+
+          const card = window.Munchkin.player.pickCardFromHand(window.Munchkin.game.clickedCardId);
+
+          document.getElementById('equip').hidden = 
+            card.type !== 'gear' || window.Munchkin.game.turn.monster;
+          document.getElementById('hold').hidden = 
+            card.type !== 'treasure' || window.Munchkin.game.turn.monster;;
         });
 
         document.addEventListener('click', (e) => {
           if (e.target.id === 'hold') {
-            window.Munchkin.player.cardToInventory(window.Munchkin.game.clickedCardName, 'hold');
+            window.Munchkin.player.cardToInventory(
+              window.Munchkin.game.clickedCardId, 
+              'hold'
+            );
             this.updateHoldCards();
             this.updateHand();
+            window.Munchkin.player.updateStr();
+            this.updatePlayer('str', window.Munchkin.player.str);
           } else if (e.target.id === 'equip') {
-            window.Munchkin.player.cardToInventory(window.Munchkin.game.clickedCardName, 'equipped');
+            window.Munchkin.player.cardToInventory(
+              window.Munchkin.game.clickedCardId, 
+              'equipped'
+            );
             this.updateEquippedCards();
             this.updateHand();
+            window.Munchkin.player.updateStr();
+            this.updatePlayer('str', window.Munchkin.player.str);
           } else if (e.target.id === 'drop') {
-            window.Munchkin.player.dropCard('hand', window.Munchkin.game.clickedCardName);
+            window.Munchkin.player.dropCard(
+              'hand', 
+              window.Munchkin.game.clickedCardId
+            );
             this.updateHand();
           } else if (e.target.id === 'fight') {
             window.Munchkin.game.enableAdventurePhase();

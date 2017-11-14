@@ -12,13 +12,4 @@
 		game.start();
 
 		// Next phase:
-
-		// if (hand.length > 5) {
-    //  window.Munchkin.ui.updateProgress(
-    //    'You have more than 5 cards on your hand! \
-    //    Drop some of them, before you can end your game.turn!'
-    //   );
-    // } else {
-    //  allowNextgame.Turn();
-    // }
 })();
