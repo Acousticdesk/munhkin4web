@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Munchkin: Web</title>
+	<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+	<ul id="context">
+		<li id="hold">Hold</li>
+		<li id="equip">Equip</li>
+		<li id="drop">Drop</li>
+		<li hidden id="fight">Fight</li>
+	</ul>
+
+	<h1 id="progress" class="progress">Progress:</h1>
+
+	<section id="player_section">
+		<h2>Player:</h2>
+		<ul>
+			<li id="player_lvl"><b>lvl:</b> <i>1</i></li>
+			<li id="player_str"><b>strength:</b> <i>1</i></li>
+			<li id="player_curses"><b>curses:</b> <i>no curses</i></li>
+		</ul>
+	</section>
+
+	<hr>
+
+	<section id="hand_section">
+		<h2>Hand:</h2>
+		<ul id="hand_cards">
+			<i>No cards on the hand right now</i>
+		</ul>
+	</section>
+
+	<hr>
+
+	<section id="inventory_section">
+		<h2>Inventory:</h2>
+		<h3>Hold cards:</h3>
+		<ul id="hold_cards">
+			<i>You aren't holding any cards yet</i>
+		</ul>
+		<h3>Equipped cards:</h3>
+		<ul id="equipped_cards">
+			<i>You don't have any equipped cards yet</i>
+		</ul>
+	</section>
+
+	<button id="nextPhase">nextPhase!</button>
+
+	<script src="./game.js"></script>
+	<script src="./ui.js"></script>
+	<script src="./player.js"></script>
+	<script src="./cards.js"></script>
+	<script src="./app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

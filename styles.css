@@ -1,0 +1,55 @@
+body {
+  padding-top: 50px;
+} 
+.progress {
+  margin: 0;
+  top: 0;
+  left: 0;
+  position: fixed;
+  background: white;
+  color: red;
+}
+#context {
+  display: none;
+  top: 0;
+  left: 0;
+  position: absolute;
+  list-style-type: none;
+  width: 100px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background: #f0f0f0;
+}
+#context li {
+  padding: 10px 0;
+  cursor: pointer;
+}
+#context li:hover {
+  background: lightblue;
+  color: white;
+}
+#context.in {
+  display: block;
+}
+button {
+  padding: 10px 20px;
+  color: tomato;
+}
+ul {
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+}
+#hand_cards > li,
+#hold_cards > li,
+#equipped_cards > li {
+  vertical-align: top;
+  padding: 10px;
+  border: 1px solid #202020;
+  display: inline-block;
+  margin-right: 10px;
+  text-align: center;
+}
